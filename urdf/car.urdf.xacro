@@ -1,32 +1,22 @@
 <?xml version="1.0"?>
 <robot name="car" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <link name="car">
-    <visual>
-      <geometry>
-        <mesh filename="package://car_urdf/meshes/lr90.dae" scale="2 2 2" />
-      </geometry>
-      <origin rpy="0 0 0" xyz="1.2 0 1.5" />
-    </visual>
-    <collision>
-      <geometry>
-        <box size="4 2 2"/>
-      </geometry>
-      <origin rpy="0 0 0" xyz="1 0 1" />
-    </collision>
-  </link>
+  <!-- make a car -->
+  <xacro:include filename="$(find car_urdf)/urdf/landrover90.urdf.xacro" />
+  <xacro:landrover90 prefix="" />
 
   <!-- make it mobile -->
   <xacro:include filename="$(find car_urdf)/urdf/move_base.urdf.xacro" />
   <xacro:move_base prefix="" />
 
-  <joint name="mobile_to_base" type="fixed">
+  <!-- fix the car to the mobile base -->
+  <joint name="mobile_to_car" type="fixed">
     <parent link="mobile" />
     <child link = "car" />
   </joint>
 
+  <!-- and fix the mobile base origin to "base_link" to keep RVIZ happy-->
   <link name="base_link" />
-
   <joint name="base_to_world" type="fixed">
     <parent link="base_link" />
     <child link = "world" />

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot name="car" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- make a car -->
+  <xacro:include filename="$(find car_urdf)/urdf/landrover90.urdf.xacro" />
+  <xacro:landrover90 prefix="robot1_" />
+
+  <!-- make it mobile -->
+  <xacro:include filename="$(find car_urdf)/urdf/move_base.urdf.xacro" />
+  <xacro:move_base prefix="robot1_" />
+
+  <!-- fix the car to the mobile base -->
+  <joint name="robot1_mobile_to_car" type="fixed">
+    <parent link="robot1_mobile" />
+    <child link = "robot1_car" />
+  </joint>
+
+  <!-- make a car -->
+  <xacro:include filename="$(find car_urdf)/urdf/landrover90.urdf.xacro" />
+  <xacro:landrover90 prefix="robot2_" />
+
+  <!-- make it mobile -->
+  <xacro:include filename="$(find car_urdf)/urdf/move_base.urdf.xacro" />
+  <xacro:move_base prefix="robot2_" />
+
+  <!-- fix the car to the mobile base -->
+  <joint name="robot2_mobile_to_car" type="fixed">
+    <parent link="robot2_mobile" />
+    <child link = "robot2_car" />
+  </joint>
+
+  <!-- and fix the mobile base origin to "base_link" to keep RVIZ happy-->
+  <link name="base_link" />
+  <joint name="robot1_base_to_world" type="fixed">
+    <parent link="base_link" />
+    <child link = "robot1_world" />
+  </joint>
+  <joint name="robot2_base_to_world" type="fixed">
+    <parent link="base_link" />
+    <child link = "robot2_world" />
+  </joint>
+
+</robot>

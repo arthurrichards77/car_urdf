@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="landrover90" params="prefix">
+
+  <link name="${prefix}car">
+    <visual>
+      <geometry>
+        <mesh filename="package://car_urdf/meshes/lr90.dae" scale="2 2 2" />
+      </geometry>
+      <origin rpy="0 0 0" xyz="1.2 0 1.5" />
+    </visual>
+    <collision>
+      <geometry>
+        <box size="4 2 2"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="1 0 1" />
+    </collision>
+  </link>
+
+  </xacro:macro>
+
+</robot>
