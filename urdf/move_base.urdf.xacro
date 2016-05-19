@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="move_base" params="prefix">
+
+    <link name="${prefix}world" />
+
+    <link name="${prefix}x" />
+
+    <link name="${prefix}xy" />
+
+    <link name="${prefix}mobile" />
+
+    <joint name="${prefix}move_x" type="prismatic" >
+      <parent link="${prefix}world" />
+      <child link="${prefix}x" />
+      <axis xyz="1 0 0" />
+      <limit lower="-100" upper="100" effort="100" velocity="100" />
+    </joint>
+
+    <joint name="${prefix}move_y" type="prismatic" >
+      <parent link="${prefix}x" />
+      <child link="${prefix}xy" />
+      <axis xyz="0 1 0" />
+      <limit lower="-100" upper="100" effort="100" velocity="100" />
+    </joint>
+
+    <joint name="${prefix}turn_z" type="revolute" >
+      <parent link="${prefix}xy" />
+      <child link="${prefix}mobile" />
+      <axis xyz="0 0 1" />
+      <limit lower="-3.141" upper="3.141" effort="100" velocity="100" />
+    </joint>
+
+  </xacro:macro>
+
+
+</robot>
