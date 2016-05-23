@@ -2,7 +2,7 @@
 
   <arg name="panels" default="false" />
 
-  <param name="default_trajectory_folder"  value="$(find car_urdf)/launch" />
+  <param name="default_trajectory_folder"  value="$(find car_urdf)/matlab" />
   <param name="repeat_period"  value="25" />
   <node name="traj_gui" pkg="aapacs_drones" type="csv_trajectory_gui.py" />
 
