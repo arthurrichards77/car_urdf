@@ -2,15 +2,24 @@
 close all
 clear all
 
+% parameters
+W = 3; % spacing
+R = 15; % turn radius
+
+% derived params
+dtheta = acos((R-0.5*W)/R);
+dx = R*sin(dtheta);
+dy = 0.5*W;
+
 %% basic node structure
-prob.arc_xs = [70 9 -9 -50; % car 1
-              -50 -6 0  0]'; % car 2
+prob.arc_xs = [ 50 dx*[2 1 -1 -2] -50; % car 1
+               -50 dx*[-2 -1 1 2]  50]'; % car 2
 
-prob.arc_ys = [0  0 0 0;  % car 1
-               3 3 -3 -50]'; % car 2
+prob.arc_ys = [0 0 0 0 0 0;  % car 1
+               W W 0.5*W 0.5*W W W]'; % car 2
 
-prob.arc_hdgs = [pi pi pi pi; % ACW from +x
-                0 0 -pi/2 -pi/2]';
+prob.arc_hdgs = [pi pi pi pi pi pi; % ACW from +x
+                0 0 -dtheta dtheta 0 0]';
 
 %% extract sizes
 prob.n_cars = size(prob.arc_xs,2);
@@ -44,12 +53,16 @@ prob.b = [];
 %% conflict avoidance
 
 % constraints for 2 to go after 1
-prob.A_after = [1 1 1 1 0 0 0 0 -1 -1 -1 0 0 0 0 0];
+prob.A_after = zeros(1,28);
+prob.A_after(1:8)=1;
+prob.A_after(14+(1:3))=-1;
 prob.b_after = [0];
 
 % constraints for 2 to go before 1
-prob.A_before = [-1 -1 -1  0 0 0 0 0 1 1 1 1 0 0 0 0];
-prob.b_before = [-2];
+prob.A_before = zeros(1,28);
+prob.A_before(1:3)=-1;
+prob.A_before(14+(1:8))=1;
+prob.b_before = [0];
            
 %% solve
 
@@ -108,7 +121,7 @@ for tt=t_anim,
 end
 
 %% save for use in ROS
-file_name = 'turnin.csv';
+file_name = 'obstruct.csv';
 fid = fopen(file_name,'w');
 
 % make header row

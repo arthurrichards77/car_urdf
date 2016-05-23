@@ -31,7 +31,7 @@ for cc=1:prob.n_cars,
             % straight line case
             prob.arc_xp(inds,cc) = linspace(xs,xf,prob.n_arc_p);
             prob.arc_yp(inds,cc) = linspace(ys,yf,prob.n_arc_p);
-        elseif dhs==-dhf,
+        elseif abs(dhs+dhf)<1e-6,
             % circular arc case
             % radius of turn
             R = -0.5*prob.ell_arcs(ii,cc)/sin(dhs);
@@ -46,6 +46,9 @@ for cc=1:prob.n_cars,
             % and reduce max speed if appropriate
             prob.v_max(ii,cc) = min([prob.v_max(ii,cc) sqrt(abs(prob.lat_acc*R))]);
         else
+            dhs
+            dhf
+            dhs+dhf
             error('Neither line nor arc');
         end
     end
