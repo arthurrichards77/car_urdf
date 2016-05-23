@@ -3,6 +3,7 @@
   <arg name="panels" default="false" />
 
   <param name="default_trajectory_folder"  value="$(find car_urdf)/launch" />
+  <param name="repeat_period"  value="25" />
   <node name="traj_gui" pkg="aapacs_drones" type="csv_trajectory_gui.py" />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
@@ -14,7 +15,7 @@
     <rosparam param="source_list">['robot1/joint_states', 'robot2/joint_states']</rosparam>
   </node>
 
-<param name="robot_description" command="$(find xacro)/xacro.py /home/arthur/hydro_workspace/arthur_play/car_urdf/urdf/two_cars.urdf.xacro" />
+<param name="robot_description" command="$(find xacro)/xacro.py $(find car_urdf)/urdf/two_cars.urdf.xacro" />
 
   <include file="$(find aapacs_drones)/launch/single_virtual.launch">
     <arg name="drone_name" value="robot1" />
