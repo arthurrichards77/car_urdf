@@ -4,7 +4,8 @@ clear all
 
 % parameters
 W = 3; % spacing
-R = 15; % turn radius
+R = 18; % turn radius
+car1_start_dist = 100;
 
 % derived params
 dtheta = acos((R-0.5*W)/R);
@@ -12,7 +13,7 @@ dx = R*sin(dtheta);
 dy = 0.5*W;
 
 %% basic node structure
-prob.arc_xs = [ 50 dx*[2 1 -1 -2] -50; % car 1
+prob.arc_xs = [car1_start_dist dx*[2 1 -1 -2] -50; % car 1
                -50 dx*[-2 -1 1 2]  50]'; % car 2
 
 prob.arc_ys = [0 0 0 0 0 0;  % car 1
