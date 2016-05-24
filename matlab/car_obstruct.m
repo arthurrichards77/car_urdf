@@ -5,7 +5,7 @@ clear all
 % parameters
 W = 3; % spacing
 R = 18; % turn radius
-car1_start_dist = 100;
+car1_start_dist = 60;
 
 % derived params
 dtheta = acos((R-0.5*W)/R);
@@ -126,10 +126,10 @@ file_name = 'obstruct.csv';
 fid = fopen(file_name,'w');
 
 % make header row
-fprintf(fid,'time_from_start,robot1_move_x,robot1_move_y,robot1_move_z,robot1_turn_z,robot2_move_x,robot2_move_y,robot2_move_z,robot2_turn_z\n');
+fprintf(fid,'time_from_start,robot1_move_x,robot1_move_y,robot1_move_z,robot1_turn_z,robot2_move_x,robot2_move_y,robot2_move_z,robot2_turn_z,robot3_move_x,robot3_move_y,robot3_move_z,robot3_turn_z\n');
 
 % store the trajectory
-fprintf(fid,'%f,%f,%f,%f,%f,%f,%f,%f,%f\n',traj_store');
+fprintf(fid,'%f,%f,%f,%f,%f,%f,%f,%f,%f,0,3,0,0\n',traj_store');
 
 fclose(fid);
 

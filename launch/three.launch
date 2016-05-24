@@ -1,0 +1,35 @@
+<launch>	
+
+  <arg name="panels" default="false" />
+
+  <param name="default_trajectory_folder"  value="$(find car_urdf)/matlab" />
+  <param name="repeat_period"  value="25" />
+  <node name="traj_gui" pkg="aapacs_drones" type="csv_trajectory_gui.py" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find car_urdf)/rviz/cars.rviz"/>
+
+  <param name="use_gui" value="false"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <rosparam param="source_list">['robot1/joint_states', 'robot2/joint_states', 'robot3/joint_states']</rosparam>
+  </node>
+
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find car_urdf)/urdf/three_cars.urdf.xacro" />
+
+  <include file="$(find aapacs_drones)/launch/single_virtual.launch">
+    <arg name="drone_name" value="robot1" />
+    <arg name="use_panel" value="$(arg panels)" />
+  </include>
+
+  <include file="$(find aapacs_drones)/launch/single_virtual.launch">
+    <arg name="drone_name" value="robot2" />
+    <arg name="use_panel" value="$(arg panels)" />
+  </include>
+
+  <include file="$(find aapacs_drones)/launch/single_virtual.launch">
+    <arg name="drone_name" value="robot3" />
+    <arg name="use_panel" value="$(arg panels)" />
+  </include>
+
+  </launch>
