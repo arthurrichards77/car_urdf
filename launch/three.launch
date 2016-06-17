@@ -4,7 +4,7 @@
 
   <param name="default_trajectory_folder"  value="$(find car_urdf)/matlab" />
   <param name="repeat_period"  value="25" />
-  <node name="traj_gui" pkg="aapacs_drones" type="csv_trajectory_gui.py" />
+  <node name="traj_gui" pkg="brl_drones" type="csv_trajectory_gui.py" />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
@@ -17,17 +17,17 @@
 
   <param name="robot_description" command="$(find xacro)/xacro.py $(find car_urdf)/urdf/three_cars.urdf.xacro" />
 
-  <include file="$(find aapacs_drones)/launch/single_virtual.launch">
+  <include file="$(find brl_drones)/launch/single_virtual.launch">
     <arg name="drone_name" value="robot1" />
     <arg name="use_panel" value="$(arg panels)" />
   </include>
 
-  <include file="$(find aapacs_drones)/launch/single_virtual.launch">
+  <include file="$(find brl_drones)/launch/single_virtual.launch">
     <arg name="drone_name" value="robot2" />
     <arg name="use_panel" value="$(arg panels)" />
   </include>
 
-  <include file="$(find aapacs_drones)/launch/single_virtual.launch">
+  <include file="$(find brl_drones)/launch/single_virtual.launch">
     <arg name="drone_name" value="robot3" />
     <arg name="use_panel" value="$(arg panels)" />
   </include>
