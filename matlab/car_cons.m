@@ -13,11 +13,8 @@ for ii=1:prob.n_cars,
         dt_arc = dts(2*kk, ii);
         v0 = vs(kk,ii);
         v1 = vs(kk+1,ii);
-        a = v0*dt_arc/prob.ell_arcs(kk,ii);
-        b = v1*dt_arc/prob.ell_arcs(kk,ii);
         for tt = ts,
-            s_dot = a*(1-tt)*(1-tt) + b*tt*tt + (6-2*a-2*b)*tt*(1-tt);
-            v = s_dot*prob.ell_arcs(kk,ii)/dt_arc;
+            v = v0*(1-tt)*(1-tt) + v1*tt*tt + (6*prob.ell_arcs(kk,ii)/dt_arc-2*v0-2*v1)*tt*(1-tt);            
             c = [c; v-prob.v_max(kk,ii); -v];
         end
     end

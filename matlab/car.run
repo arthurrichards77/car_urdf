@@ -1,0 +1,16 @@
+model car.mod;
+
+data car.dat;
+
+option solver ipopt;
+option ipopt_options 'halt_on_ampl_error yes print_level 5';
+
+#write bstub;
+#write gstub2;
+
+solve;
+
+# multi vehicle result files
+printf{i in 1..Ncars,j in 1..Narcs} "%f %f\n", Twait[i,j], Tdrive[i,j] > Ts.dat;
+printf{i in 1..Ncars,j in 1..(Narcs+1)} "%f\n", Vnode[i,j] > Vs.dat;
+display lam;
