@@ -4,3 +4,8 @@ meshes/*.stl
 *.dat
 *.nl
 *.sol
+*.asv
+*.exe
+*.o
+*.out
+matlab/ipoptgen/solve.txt

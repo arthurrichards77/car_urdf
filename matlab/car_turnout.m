@@ -27,6 +27,9 @@ prob.v_init = 0.95*prob.v_max(1,:);
 % lateral accel
 prob.lat_acc = 0.25*9.81;
 
+% settings for speed constraint generation
+prob.num_spd_pts = 7;
+
 %% arc geometry
 prob = getGeometry(prob);
 
@@ -55,10 +58,10 @@ prob.b_before = [-3];
            
            
 %% stopping for give way
-prob.Aeq = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0];
-prob.beq = 0;
-
-prob.x0(15)=0;
+% prob.Aeq = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0];
+% prob.beq = 0;
+% 
+% prob.x0(15)=0;
 
 % try adding a wait manually to guess
 %prob.x0(11)=3; % doesn't work - always keep IG value
