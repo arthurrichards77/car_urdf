@@ -1,11 +1,14 @@
-function ipoptgen(obj,cons,x0,x_L,x_H,g_L,g_H)
+function ipoptgen(obj,cons,x0,x_L,x_H,g_L,g_H,params)
 
 %% symbolic decision variables
 x = sym('x',[numel(x0) 1]);
 
+% and parameters
+sym_params = make_sym_params(params);
+
 % objective and constraints
-f = obj(x);
-g = cons(x);
+f = obj(x,sym_params);
+g = cons(x,sym_params);
 
 %% calculations of derivatives etc
 
@@ -61,6 +64,52 @@ for kk = 1:nnz_h_lag,
 end
 %h_lag_values
 
+%% write parameter c
+
+% start writing the file
+fid = fopen('ipoptgen/mynlp_params_init.cpp','w');
+
+param_names = fieldnames(params);
+
+for kk = 1:numel(param_names),
+    p = getfield(params,param_names{kk});
+    if ismatrix(p),
+        for ii=1:size(p,1),
+            for jj=1:size(p,2),
+                fprintf(fid,'%s[%d][%d] = %f;\n',param_names{kk},ii-1,jj-1,p(ii,jj));
+            end
+        end
+    else
+        error('One of the parameters is neither a vector nor a matrix')
+    end   
+end
+
+fclose(fid);
+
+%% write parameter header c
+
+% start writing the file
+fid = fopen('ipoptgen/mynlp_params.hpp','w');
+
+% initial guess is always a parameter
+fprintf(fid,'Number x_init[%d];\n',n);
+
+% work through parameters
+param_names = fieldnames(params);
+
+for ii = 1:numel(param_names),
+    p = getfield(params,param_names{ii});
+    if ismatrix(p),
+        fprintf(fid,'Number %s[%d][%d];\n',param_names{ii},size(p,1),size(p,2));
+    elseif isvector(p),
+        fprintf(fid,'Number %s[%d] = %s;\n',param_names{ii},numel(p));
+    else
+        error('One of the parameters is neither a vector nor a matrix')
+    end   
+end
+
+fclose(fid);
+
 %% write C code
 
 % NLP class name
@@ -108,12 +157,14 @@ fprintf(fid,'bool %s::eval_f(Index n, const Number* x, bool new_x, Number& obj_v
 c = ccode(f);
 % replace the default return value
 c = regexprep(c,'t0','obj_value');
+c = fix_params_c(c,params);
 c = fix_dec_var_c(c,n);
 fprintf(fid,'%s\n  return true;\n}\n\n',c);
 
 % gradient of objective
 fprintf(fid,'bool %s::eval_grad_f(Index n, const Number* x, bool new_x, Number* grad_f)\n{\n',nlp_class_name);
 c=ccode(grad_f);
+c = fix_params_c(c,params);
 c = fix_dec_var_c(c,n);
 % replace the extra indices
 c = regexprep(c,']\[0\] =','] =');
@@ -122,6 +173,7 @@ fprintf(fid,'%s\n  return true;\n}\n\n',c);
 % constraints
 fprintf(fid,'bool %s::eval_g(Index n, const Number* x, bool new_x, Index m, Number* g)\n{\n',nlp_class_name);
 c=ccode(g);
+c = fix_params_c(c,params);
 c = fix_dec_var_c(c,n);
 % replace the extra indices
 c = regexprep(c,']\[0\] =','] =');
@@ -133,6 +185,7 @@ for ii=1:nnz_jac_g,
     fprintf(fid,'    iRow[%d] = %d; jCol[%d] = %d;\n',ii-1,iRow(ii)-1,ii-1,jCol(ii)-1);
 end
 c = ccode(jac_g_values);
+c = fix_params_c(c,params);
 c = fix_dec_var_c(c,n);
 c = regexprep(c,'jac_g_values\[0\]','  values');
 fprintf(fid,'  }\n  else {\n%s\n  }\n  return true;\n}\n',c);
@@ -143,6 +196,7 @@ for ii=1:nnz_h_lag,
     fprintf(fid,'    iRow[%d] = %d; jCol[%d] = %d;\n',ii-1,iRow_h(ii)-1,ii-1,jCol_h(ii)-1);
 end
 c = ccode(h_lag_values);
+c = fix_params_c(c,params);
 c = fix_dec_var_c(c,n);
 c = fix_lambda_c(c,m);
 c = regexprep(c,'h_lag_values\[0\]','  values');

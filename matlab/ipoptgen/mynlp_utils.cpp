@@ -15,7 +15,14 @@
 using namespace Ipopt;
 
 HS071_NLP::HS071_NLP()
-{}
+{
+
+    std::cout << "Hello" << std::endl;
+    
+#include "mynlp_params_init.cpp"
+
+}
+
 HS071_NLP::~HS071_NLP()
 {}
 

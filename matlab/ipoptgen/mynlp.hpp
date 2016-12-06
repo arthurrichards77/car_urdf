@@ -15,6 +15,9 @@ using namespace Ipopt;
 
 class HS071_NLP : public TNLP
 {
+    
+#include "mynlp_params.hpp"    
+    
 public:
   /** default constructor */
   HS071_NLP();

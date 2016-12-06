@@ -1,4 +1,4 @@
-function [J,g] = car_cost(x,prob)
+function [J,g] = car_cost(x,params,prob)
 
 %[dts,vs] = get_vars(x,prob);
 

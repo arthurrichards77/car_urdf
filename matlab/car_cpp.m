@@ -5,7 +5,7 @@ clear all
 tic
 
 %% basic node structure
-prob.arc_xs = [60 9 -9 -50; % car 1
+prob.arc_xs = [40 9 -9 -50; % car 1
     0  0 -9 -50]'; % car 2
 
 prob.arc_ys = [0  0 0 0;  % car 1
@@ -47,10 +47,14 @@ prob.b = [0];
            
 %% use init guess to form bounds vectors
 
+% parameters for variation in code
+params.v_max = prob.v_max;
+params.ell_arcs = prob.ell_arcs;
+
 [dts0,vs0]=get_vars(prob.x0,prob);
 
 % speeds
-[v,vhi,vlo] = car_spds(prob.x0,prob);
+[v,vhi,vlo] = car_spds(prob.x0,params,prob);
 
 % and continuities
 c_eq0 = car_eqs(prob.x0,prob);
@@ -63,8 +67,9 @@ x_H = x_L + max(max(prob.v_max));
 
 %prob.x0(15)=0;
 
-%% build and make
-ipoptgen(@(x)car_cost(x,prob),@(x)car_g(x,prob),prob.x0,x_L,x_H,g_L,g_H)
+%% generate and make
+
+ipoptgen(@(x,p)car_cost(x,p,prob),@(x,p)car_g(x,p,prob),prob.x0,x_L,x_H,g_L,g_H,params)
 
 cd ipoptgen
 !make

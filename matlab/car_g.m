@@ -1,6 +1,6 @@
-function g = car_g(x,prob)
+function g = car_g(x,params,prob)
 
-[v,~,~,vle0] = car_spds(x,prob);
+[v,~,~,vle0] = car_spds(x,params,prob);
 [c_eq] = car_eqs(x,prob);
 g = [v;
      c_eq;
