@@ -61,6 +61,8 @@ g_H = [vhi;0*c_eq0;prob.b];
 x_L = 0*prob.x0;
 x_H = x_L + max(max(prob.v_max));
 
+%prob.x0(15)=0;
+
 %% build and make
 
 ipoptgen(@(x)car_cost(x,prob),@(x)car_g(x,prob),prob.x0,x_L,x_H,g_L,g_H)

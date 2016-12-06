@@ -1,8 +1,8 @@
 function [v,vhi,vlo] = car_spds(x,prob)
 
 [dts,vs] = get_vars(x,prob);
-
-ts = linspace(0,1,prob.num_spd_pts);
+ts = linspace(0,1,2+prob.num_spd_pts);
+ts = ts(2:(1+prob.num_spd_pts));
 v=[];
 vhi = [];
 vlo = [];

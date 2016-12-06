@@ -10,53 +10,84 @@
 #include "mynlp.hpp"
 
 #include <iostream>
+#include <cstdlib>
 
 using namespace Ipopt;
 
 int main(int argv, char* argc[])
 {
-  // Create a new instance of your nlp
-  //  (use a SmartPtr, not raw)
-  SmartPtr<TNLP> mynlp = new HS071_NLP();
-
-  // Create a new instance of IpoptApplication
-  //  (use a SmartPtr, not raw)
-  // We are using the factory, since this allows us to compile this
-  // example with an Ipopt Windows DLL
-  SmartPtr<IpoptApplication> app = IpoptApplicationFactory();
-  app->RethrowNonIpoptException(true);
-
-  // Change some options
-  // Note: The following choices are only examples, they might not be
-  //       suitable for your optimization problem.
-  app->Options()->SetNumericValue("tol", 1e-7);
-  app->Options()->SetStringValue("mu_strategy", "adaptive");
-  // app->Options()->SetStringValue("output_file", "ipopt.out");
-  // The following overwrites the default name (ipopt.opt) of the
-  // options file
-  // app->Options()->SetStringValue("option_file_name", "hs071.opt");
-
-  // Initialize the IpoptApplication and process the options
-  ApplicationReturnStatus status;
-  status = app->Initialize();
-  if (status != Solve_Succeeded) {
-    std::cout << std::endl << std::endl << "*** Error during initialization!" << std::endl;
+    // Create a new instance of your nlp
+    //  (use a SmartPtr, not raw)
+    SmartPtr<TNLP> mynlp = new HS071_NLP();
+    
+    // Create a new instance of IpoptApplication
+    //  (use a SmartPtr, not raw)
+    // We are using the factory, since this allows us to compile this
+    // example with an Ipopt Windows DLL
+    SmartPtr<IpoptApplication> app = IpoptApplicationFactory();
+    app->RethrowNonIpoptException(true);
+    
+    // Change some options
+    // Note: The following choices are only examples, they might not be
+    //       suitable for your optimization problem.
+    app->Options()->SetNumericValue("tol", 1e-7);
+    app->Options()->SetStringValue("mu_strategy", "adaptive");
+    // app->Options()->SetStringValue("warm_start_init_point", "no");
+    // app->Options()->SetStringValue("output_file", "ipopt.out");
+    // The following overwrites the default name (ipopt.opt) of the
+    // options file
+    // app->Options()->SetStringValue("option_file_name", "hs071.opt");
+    
+    // Initialize the IpoptApplication and process the options
+    ApplicationReturnStatus status;
+    status = app->Initialize();
+    if (status != Solve_Succeeded) {
+        std::cout << std::endl << std::endl << "*** Error during initialization!" << std::endl;
+        return (int) status;
+    }
+    
+    // Ask Ipopt to solve the problem
+    status = app->OptimizeTNLP(mynlp);
+    
+    // solve multiple times for timing tests
+    int num_solves=1;
+    if (argv>1) {
+        //std::cout << std::endl << argc[1] << std::endl;
+        num_solves = std::atoi(argc[1]);
+    }
+    std::cout << std::endl << "Solving " << num_solves << " times." << std::endl;
+    int kk;
+    for (kk=0;kk<num_solves-1;kk++) {
+        
+        //mynlp = new HS071_NLP();
+        //app = IpoptApplicationFactory();
+        //app->RethrowNonIpoptException(true);
+        //app->Options()->SetNumericValue("tol", 1e-7);
+        //app->Options()->SetStringValue("mu_strategy", "adaptive");
+    
+        // re-initialize
+        //status = app->Initialize();
+        //if (status != Solve_Succeeded) {
+        //    std::cout << std::endl << std::endl << "*** Error during initialization!" << std::endl;
+        //    return (int) status;
+        //}
+        
+        // Ask Ipopt to solve the problem
+        status = app->ReOptimizeTNLP(mynlp);
+        
+        if (status == Solve_Succeeded) {
+            std::cout << std::endl << std::endl << "*** The problem solved!" << std::endl;
+        }
+        else {
+            std::cout << std::endl << std::endl << "*** The problem FAILED!" << std::endl;
+            break;
+        }
+        
+    }
+    
+    // As the SmartPtrs go out of scope, the reference count
+    // will be decremented and the objects will automatically
+    // be deleted.
+    
     return (int) status;
-  }
-
-  // Ask Ipopt to solve the problem
-  status = app->OptimizeTNLP(mynlp);
-
-  if (status == Solve_Succeeded) {
-    std::cout << std::endl << std::endl << "*** The problem solved!" << std::endl;
-  }
-  else {
-    std::cout << std::endl << std::endl << "*** The problem FAILED!" << std::endl;
-  }
-
-  // As the SmartPtrs go out of scope, the reference count
-  // will be decremented and the objects will automatically
-  // be deleted.
-
-  return (int) status;
 }
