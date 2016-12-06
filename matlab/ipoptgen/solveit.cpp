@@ -32,6 +32,7 @@ int main(int argv, char* argc[])
     //       suitable for your optimization problem.
     app->Options()->SetNumericValue("tol", 1e-7);
     app->Options()->SetStringValue("mu_strategy", "adaptive");
+    // app->Options()->SetStringValue("derivative_test", "second-order");
     // app->Options()->SetStringValue("warm_start_init_point", "no");
     // app->Options()->SetStringValue("output_file", "ipopt.out");
     // The following overwrites the default name (ipopt.opt) of the

@@ -13,27 +13,6 @@
 
 using namespace Ipopt;
 
-/** C++ Example NLP for interfacing a problem with IPOPT.
- *  HS071_NLP implements a C++ example of problem 71 of the
- *  Hock-Schittkowski test suite. This example is designed to go
- *  along with the tutorial document and show how to interface
- *  with IPOPT through the TNLP interface. 
- *
- * Problem hs071 looks like this
- *
- *     min   x1*x4*(x1 + x2 + x3)  +  x3
- *     s.t.  x1*x2*x3*x4                   >=  25
- *           x1**2 + x2**2 + x3**2 + x4**2  =  40
- *           1 <=  x1,x2,x3,x4  <= 5
- *
- *     Starting point:
- *        x = (1, 5, 5, 1)
- *
- *     Optimal solution:
- *        x = (1.00000000, 4.74299963, 3.82114998, 1.37940829)
- *
- *
- */
 class HS071_NLP : public TNLP
 {
 public:

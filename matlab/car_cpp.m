@@ -56,8 +56,8 @@ prob.b = [0];
 c_eq0 = car_eqs(prob.x0,prob);
 
 % form bounds on g
-g_L = [vlo;0*c_eq0;0*prob.b-2e19];
-g_H = [vhi;0*c_eq0;prob.b];
+g_L = [vlo-2e20;vlo-2e20;0*c_eq0;0*prob.b-2e20];
+g_H = [vlo;vlo;0*c_eq0;prob.b];
 x_L = 0*prob.x0;
 x_H = x_L + max(max(prob.v_max));
 
